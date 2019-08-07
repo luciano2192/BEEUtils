@@ -1,0 +1,48 @@
+<h1 class="display-8">Generador de Grants</h1>
+<div>
+<div class="contenedorformulario float-left">
+  <form  [formGroup]="grantForm" (ngSubmit)="generarGrants()">
+    
+    <div class="form-group">
+      <label for="esquema">Esquema</label>
+      <select formControlName="esquema" class="form-control" name="esquema">
+        <option *ngFor="let esquema of esquemas" [ngValue]="esquema">{{esquema}}</option>
+      </select>
+    </div>
+
+
+    <div class="form-group">
+      <label for="tabla">Tabla</label>
+      <input [ngClass]="{'is-invalid':nombreTabla.invalid && (nombreTabla.dirty || nombreTabla.touched)}" pattern="[a-zA-Z_]*" formControlName="nombreTabla" class="form-control" type="text" placeholder="Ingrese la tabla a generar" required>
+      <div class="invalid-feedback">
+          Dale.. Crack...
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoTabla">Tipo de tabla</label>
+      <select formControlName="tipoTabla" class="form-control" >
+        <option *ngFor="let tipo of tiposDeTablas" [ngValue]="tipo" >{{tipo}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <div class="custom-control custom-radio custom-control-inline" *ngFor="let app of aplicaciones">
+        <input formControlName="aplicacion" type="radio" id="radio{{app.aplicacion}}" value="{{app.rol}}" class="custom-control-input">
+        <label class="custom-control-label" for="radio{{app.aplicacion}}">{{app.aplicacion}}</label>
+      </div>
+
+      <p class="lead text-info leyenda">
+          Recordá que lo generado por esta aplicación, es solo orientativo.
+      </p>
+
+    </div>
+    <button type="submit" [disabled]="!grantForm.valid" class="btn btn-primary btnSubmit">Generar</button>
+  </form>
+</div>
+<div class="resultado float-right container">
+  
+  <router-outlet></router-outlet>
+  
+</div>
+</div>

@@ -1,0 +1,8 @@
+import { Constraint } from "./constraint";
+
+export class Unique extends Constraint {
+    
+    constructor(nombreCampo: string) {
+        super(nombreCampo);
+    }
+}

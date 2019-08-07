@@ -1,0 +1,152 @@
+
+<div class="container">
+<h1 class="display-8">Generador de Create</h1>
+<div>
+  <form  [formGroup]="scriptForm" (ngSubmit)="generarCreate()">
+
+    <div class="form-group">
+      <label for="motor">Motor de BBDD</label>
+      <select formControlName="motor" class="form-control" name="motor" (change)="cambiarTiposDeDatosPorMotor()">
+        <option *ngFor="let bbdd of bbdds" [ngValue]="bbdd">{{bbdd}}</option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf='motor.value == "Oracle"'>
+      <label for="esquema">Esquema</label>
+      <select formControlName="esquema" class="form-control" name="esquema">
+        <option *ngFor="let esquema of esquemas" [ngValue]="esquema">{{esquema}}</option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf='motor.value == "SQLServer"'> 
+      <label for="base">Base</label>
+      <select formControlName="base" class="form-control" name="base">
+        <option *ngFor="let base of bases" [ngValue]="base">{{base}}</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="tabla">Tabla</label>
+      <input [ngClass]="{'is-invalid':nombreTabla.invalid && (nombreTabla.dirty || nombreTabla.touched)}" pattern="[a-zA-Z_]*" formControlName="nombreTabla" class="form-control" type="text" placeholder="Ingrese la tabla a generar" (change)="nombrePK()" required>
+      <div class="invalid-feedback">
+        Dale.. Crack... <img src='assets/facepalm.ico' />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoTabla">Tipo de tabla</label>
+      <select formControlName="tipoTabla" class="form-control">
+        <option *ngFor="let tipo of tiposDeTablas" [ngValue]="tipo">{{tipo}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comentario">Comentario</label>
+      <input [ngClass]="{'is-invalid':comentarioTabla.invalid && (comentarioTabla.dirty || comentarioTabla.touched)}" pattern="[a-zA-Z_ ]*"
+        formControlName="comentario" class="form-control" type="text" placeholder="Ingrese el comentario de la tabla"
+        required>
+      <div class="invalid-feedback">
+        Cualquier duda, comunicate al 2694... <img src='assets/angel.ico' />
+      </div>
+    </div>
+
+    <h4 class="display-9 float-left">Campos</h4>
+    <button class="btn btn-primary btnSubmit margin-left" (click)="agregarNuevoCampo()"><span href="#" class="oi oi-plus"></span></button>
+    
+    <div formArrayName="campos">
+      <div *ngFor="let campo of campos.controls; index as idx" [formGroupName]="idx" class="clearfix">
+      <br />
+      <hr>
+      <div class="float-left">
+      <div class="form-row">
+        <div class="col-4">
+          <input type="text" [ngClass]="{'is-invalid':nombreCampo(idx).invalid && (nombreCampo(idx).dirty || nombreCampo(idx).touched)}" class="form-control" placeholder="Nombre" name="nombreCampo" formControlName="nombreCampo" pattern="[a-zA-Z_]*" >
+          <div class="invalid-feedback">
+            Dale.. Crack... <img src='assets/facepalm.ico' />
+          </div>
+        </div>
+        <div class="col-3">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="tipoDato">Tipo</label>
+                </div>
+                <select class="custom-select" id="tipoDato" formControlName="tipoDato" (change)="generarDominioAutomatico(idx)">
+                    <option *ngFor="let tipo of tiposDeDatos" [ngValue]="tipo">{{tipo}}</option>
+                </select>
+              </div>
+        </div>
+        <div class="col-4">
+          <input type="text" [ngClass]="{'is-invalid':comentario(idx).invalid && (comentario(idx).dirty || comentario(idx).touched)}"
+            class="form-control" placeholder="Comentario" name="comentario" formControlName="comentario" pattern="[a-zA-Z_ ]*">
+          <div class="invalid-feedback">
+            Dale.. Crack... <img src='assets/unamused.ico' />
+          </div>
+        </div>
+        
+      </div>
+      <br />
+      <div class="form-row">
+   
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Claves</button>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">Example select</label>
+                  <select class="form-control" id="exampleFormControlSelect1">
+                    <option  *ngFor = "let constraint of constraint">{{constraint}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <input type="text" [ngClass]="{'is-invalid':tamanio(idx).invalid && (tamanio(idx).dirty || tamanio(idx).touched)}"
+            class="form-control" placeholder="Tamaño" name="tamanio" formControlName="tamanio" pattern="[0-9,]*" (change)="generarDominioAutomatico(idx)">
+          <div class="invalid-feedback">
+            ... <img src='assets/facepalm.ico' />
+          </div>
+        </div>
+        
+        <div class="col-4">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid':dominio(idx).invalid && (dominio(idx).dirty || dominio(idx).touched)}"
+            placeholder="Dominio" name="dominio" formControlName="dominio" pattern="[a-zA-Z0-9_/, ]*">
+          <div class="invalid-feedback">
+            Sos bueno eh... <img src='assets/unamused.ico' />
+          </div>
+
+        </div>
+
+      </div>
+      </div>
+        <button *ngIf="!esPK(idx).value" class="btn btn-primary btnSubmit" (click)="quitarCampo(idx)"><span href="#" class="oi oi-x"></span></button>
+      </div>
+  </div>
+      
+
+
+
+      <p class="lead text-info leyenda">
+          Recordá que lo generado por esta aplicación, es solo orientativo.
+      </p>
+
+    <button type="submit" [disabled]="!scriptForm.valid" class="btn btn-primary btnSubmit">Generar</button>
+    
+
+  </form>
+  
+  <button type="submit" [routerLink]= "['/grants']" class="btn btn-primary">Generar Grants</button>
+ 
+</div>
+<div class="resultadoCreate">
+  
+  <router-outlet></router-outlet>
+  
+</div>
+</div>

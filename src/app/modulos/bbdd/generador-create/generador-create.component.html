@@ -1,0 +1,181 @@
+
+<div class="container">
+<h1 class="display-4">Generador de Create</h1>
+<div>
+  <form  [formGroup]="scriptForm" (ngSubmit)="generarCreate()">
+
+    <div class="form-group">
+      <label for="motor" class="font-weight-bold">Motor de BBDD</label>
+      <select formControlName="motor" class="form-control shadow-sm" name="motor" (change)="cambiarTiposDeDatosPorMotor()">
+        <option *ngFor="let bbdd of bbdds" [ngValue]="bbdd">{{bbdd}}</option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf='motor.value == "Oracle"'>
+      <label for="esquema" class="font-weight-bold">Esquema</label>
+      <select formControlName="esquema" class="form-control shadow-sm" name="esquema">
+        <option *ngFor="let esquema of esquemas" [ngValue]="esquema">{{esquema}}</option>
+      </select>
+    </div>
+    <div class="form-group" *ngIf='motor.value == "SQLServer"'> 
+      <label for="base" class="font-weight-bold">Base</label>
+      <select formControlName="base" class="form-control shadow-sm" name="base">
+        <option *ngFor="let base of bases" [ngValue]="base">{{base}}</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="tabla" class="font-weight-bold">Tabla</label>
+      <input [ngClass]="{'is-invalid':nombreTabla.invalid && (nombreTabla.dirty || nombreTabla.touched)}" pattern="[a-zA-Z_]*" formControlName="nombreTabla" class="form-control shadow-sm" type="text" placeholder="Ingrese la tabla a generar" (change)="nombrePK()" required>
+      <div class="invalid-feedback">
+        Dale.. Crack... <img src='assets/facepalm.ico' />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoTabla" class="font-weight-bold">Tipo de tabla</label>
+      <select formControlName="tipoTabla" class="form-control shadow-sm">
+        <option *ngFor="let tipo of tiposDeTablas" [ngValue]="tipo">{{tipo}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="comentario" class="font-weight-bold">Comentario</label>
+      <input [ngClass]="{'is-invalid':comentarioTabla.invalid && (comentarioTabla.dirty || comentarioTabla.touched)}" pattern="[a-zA-Z_ ]*"
+        formControlName="comentario" class="form-control shadow-sm" type="text" placeholder="Ingrese el comentario de la tabla"
+        required>
+      <div class="invalid-feedback">
+        Cualquier duda, comunicate al 2694... <img src='assets/angel.ico' />
+      </div>
+    </div>
+
+    <!-- BOTON MODAL -->
+    <button type="button" class="btn btn-primary d-flex mb-4" data-toggle="modal" data-target="#exampleModalScrollable">
+      Claves
+    </button>
+
+    <!-- MODAL CON SCROLL -->
+
+    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="h2" id="exampleModalScrollableTitle">Generar claves</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        
+          <!-- opcion uno -->
+          <!-- CONTENIDO MODAL -->
+          <div class="modal-body" *ngFor="let campo of campos.controls">
+            <button type="checkbox" class="btn btn-outline-secondary btn-lg btn-group-toggle tarjeta" style="width:150px" value="{{campo.get('nombreCampo').value}}" data-toggle="buttons"><div class="active text-truncate" checked>{{campo.get('nombreCampo').value}}</div></button> 
+          </div>
+ 
+          <div class="modal-footer">
+            <!-- CONTENIDO FOOTER -->
+            <select class="custom-select" multiple>
+              <option selected>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+              <option value="3">Three</option>
+              <option value="3">Three</option>
+              <option value="3">Three</option>
+            </select>
+          </div>          
+            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary">Guardar</button> -->
+        </div>
+      </div>
+    </div>
+    
+    <h4 class="float-left">Campos</h4>
+    <button class="btn btn-primary btnSubmit margin-left" (click)="agregarNuevoCampo()"><span href="#" class="oi oi-plus"></span></button>
+    
+    <div formArrayName="campos">
+      <div *ngFor="let campo of campos.controls; index as idx" [formGroupName]="idx" class="clearfix">
+      <br />
+      <hr>
+      <div class="float-left">
+      <div class="form-row">
+        <div class="col-4">
+          <input type="text" [ngClass]="{'is-invalid':nombreCampo(idx).invalid && (nombreCampo(idx).dirty || nombreCampo(idx).touched)}" class="form-control" placeholder="Nombre" name="nombreCampo" formControlName="nombreCampo" pattern="[a-zA-Z_]*" >
+          <div class="invalid-feedback">
+            Dale.. Crack... <img src='assets/facepalm.ico' />
+          </div>
+        </div>
+        <div class="col-3">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="tipoDato">Tipo</label>
+                </div>
+                <select class="custom-select" id="tipoDato" formControlName="tipoDato" (change)="generarDominioAutomatico(idx)">
+                    <option *ngFor="let tipo of tiposDeDatos" [ngValue]="tipo">{{tipo}}</option>
+                </select>
+              </div>
+        </div>
+        <div class="col-4">
+          <input type="text" [ngClass]="{'is-invalid':comentario(idx).invalid && (comentario(idx).dirty || comentario(idx).touched)}"
+            class="form-control" placeholder="Comentario" name="comentario" formControlName="comentario" pattern="[a-zA-Z_ ]*">
+          <div class="invalid-feedback">
+            Dale.. Crack... <img src='assets/unamused.ico' />
+          </div>
+        </div>
+        
+      </div>
+      <br />
+      <div class="form-row">
+
+        <div class="col-3">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <input formControlName="esNotNull" name="esNotNull" type="checkbox">
+              </div>
+            </div>
+            <input type="text" class="form-control" value="Not Null">
+          </div>
+        </div>
+      
+        <div class="col-3">
+          <input type="text" [ngClass]="{'is-invalid':tamanio(idx).invalid && (tamanio(idx).dirty || tamanio(idx).touched)}"
+            class="form-control" placeholder="Tamaño" name="tamanio" formControlName="tamanio" pattern="[0-9,]*" (change)="generarDominioAutomatico(idx)">
+          <div class="invalid-feedback">
+            ... <img src='assets/facepalm.ico' />
+          </div>
+        </div>
+        
+        <div class="col-5">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid':dominio(idx).invalid && (dominio(idx).dirty || dominio(idx).touched)}"
+            placeholder="Dominio" name="dominio" formControlName="dominio" pattern="[a-zA-Z0-9_/, ]*">
+          <div class="invalid-feedback">
+            Sos bueno eh... <img src='assets/unamused.ico' />
+          </div>
+
+        </div>
+
+      </div>
+      </div>
+        <button *ngIf="!esPK(idx).value" class="btn btn-primary btnSubmit" (click)="quitarCampo(idx)"><span href="#" class="oi oi-x"></span></button>
+      </div>
+    </div>
+      
+      <div class="alert alert-warning" role="alert">
+        Recordá que lo generado por esta aplicación, es solo orientativo.
+      </div>
+
+    <button type="submit" [disabled]="!scriptForm.valid" class="btn btn-primary btnSubmit">Generar</button>
+    
+    <button type="submit" [routerLink]= "['/grants']" class="btn btn-primary ml-3">Generar Grants</button>
+
+  </form> 
+</div>
+
+
+<div class="resultadoCreate">
+  
+  <router-outlet></router-outlet>
+  
+</div>
+</div>

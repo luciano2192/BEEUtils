@@ -1,0 +1,16 @@
+export class Constraint {
+    
+    private nombreCampo:string;
+
+    constructor(nombreCampo) {
+        this.nombreCampo = nombreCampo;
+    }
+
+    public setCampo(campo: string) {
+        this.nombreCampo = campo;
+    }
+
+    public getCampo() {
+        return this.nombreCampo;    
+    }
+}
