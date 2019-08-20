@@ -7,6 +7,8 @@ import { Portapapeles } from '../../../modelos/shared/portapapeles';
 import { TipoTabla } from '../../../shared/constantes/bbdd/tipoTabla.const';
 import { Constraint } from '../../../modelos/bbdd/constraint';
 import { Unique } from "../../../modelos/bbdd/unique";
+import { MatDialog, MatDialogConfig } from '@angular/material';
+import { ModalComponent } from '../../../shared/componentes/modal/modal.component';
 //import { ForeignKey } from 'src/app/modelos/bbdd/foreignKey';
 
 @Component({
@@ -16,8 +18,6 @@ import { Unique } from "../../../modelos/bbdd/unique";
   encapsulation: ViewEncapsulation.None
 })
 export class GeneradorCreateComponent implements OnInit {
-
-  
 
   esquemas:string[] = ["USR_BEE", "USR_BEE_LOG", "USR_LINK"];
 
@@ -30,9 +30,7 @@ export class GeneradorCreateComponent implements OnInit {
   bbdds: string[] = ["Oracle", "SQLServer"];
 
 
-  // constraint: string[] = ["Unique", "Primary Key" , "Foreign Key"];
-
-  
+  tiposConstraint: string[] = ["Unique", "Primary Key", "Foreign Key", "Otra"];
 
 
   scriptForm = new FormGroup({
@@ -62,8 +60,7 @@ export class GeneradorCreateComponent implements OnInit {
     campos: new FormGroup({})
   });
   
-
-
+  
   get nombreTabla(){return this.scriptForm.get("nombreTabla")};
 
   get motor() { return this.scriptForm.get("motor") };
@@ -85,7 +82,7 @@ export class GeneradorCreateComponent implements OnInit {
   get campos():FormArray{return <FormArray>this.scriptForm.get("campos")};
 
   constructor(private _generadorCreateService:GeneradorCreateService, 
-    private _router: Router, private activatedRoute: ActivatedRoute) {
+    private _router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog) {
     
   }
 
@@ -199,11 +196,9 @@ export class GeneradorCreateComponent implements OnInit {
       let tabla:Tabla = new Tabla(this.scriptForm.value);
 
       //Aca vas a agregar las constraints
+      
 
       let create = this._generadorCreateService.generarCreate(tabla);
-      
-      this.claves.push(new Unique("claveUnicaUno"), new Unique("claveUnicaDos"), new Unique("claveUnicaTres"))
-      create+=this.generarConstraint(this.claves);
 
       let contenidoPortapeles = new Portapapeles(create, "No colgues en mandar los grants a SIR...");
 
@@ -222,33 +217,19 @@ export class GeneradorCreateComponent implements OnInit {
     })
   }
 
-  // generarConstraint(clave: Constraint[]){
-  //   console.log(this.clavesForm.value);
-  //   let create="";
-  //   if(this.motor.value === "SQLServer") {
-  //     create += "ALTER TABLE " + this.nombreTabla.value.toUpperCase()
-  //            +  this.ENTER + "ADD CONSTRAINT " + constraints.getClass()
-  //            +  " (" + constraints.getCampo()+ "); "
-  //            +  this.ENTER + "GO";
-  //   }
-  //   console.log(create);
-  //   return create.toUpperCase();
-  // }
+  pasandoCampos(): void {
+    this._generadorCreateService.setearCampos(this.campos.value);
+  }
 
-  generarConstraint(claves: Constraint[]){
-    // esta logica va en el service
-    let create="";
+  abrirModal (): void {
     
-    claves.forEach( (clave) => {
-      if(this.motor.value === "SQLServer") {
-        create += "ALTER TABLE " + this.nombreTabla.value.toUpperCase()
-               +  this.ENTER + "ADD CONSTRAINT " + clave.getClass()
-               +  " (" + clave.getCampo()+ "); "
-               +  this.ENTER + "GO" + this.ENTER+this.ENTER;
-      }
-    });
-    
-    return create.toUpperCase();
+    this.pasandoCampos();
+
+    const dialogRef = this.dialog.open ( ModalComponent , {} );
+
+    dialogRef.afterClosed().subscribe( data => {
+      console .log ( 'El diálogo se cerró' );
+   });
   }
 
 }

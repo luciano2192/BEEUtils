@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule} from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
 import { GeneradorCreateComponent } from './generador-create/generador-create.component';
+import { SharedModule } from '../../shared/shared.module';
+
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { GeneradorCreateComponent } from './generador-create/generador-create.co
     FormsModule,
     ReactiveFormsModule,
     ClipboardModule,
+    SharedModule,
   ]
 })
 export class BBDDModule{ }

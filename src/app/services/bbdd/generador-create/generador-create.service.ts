@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Tabla } from "../../../modelos/bbdd/tabla";
 import { Campo } from "../../../modelos/bbdd/campo";
+import { Constraint } from '../../../modelos/bbdd/constraint';
+import { FormArray } from '@angular/forms';
 
 @Injectable()
 export class GeneradorCreateService {
@@ -8,7 +10,7 @@ export class GeneradorCreateService {
   private ENTER: string = "\n"; 
   private TAB: string = "\t";  
   private ORDEN_CON_NN : number = 1;
-
+  private camposService: FormArray;
 
   constructor() { }
 
@@ -304,24 +306,32 @@ export class GeneradorCreateService {
     }
   }
 
-  generarConstraint(tabla: Tabla) {
-
-    let create = "";
-
-    if (tabla.motor === "SQLServer") {
-      
-    }
-    
-    claves.forEach( (clave) => {
-      if(this.motor.value === "SQLServer") {
-        create += "ALTER TABLE " + this.nombreTabla.value.toUpperCase()
-               +  this.ENTER + "ADD CONSTRAINT " + clave.getClass()
-               +  " (" + clave.getCampo()+ "); "
-               +  this.ENTER + "GO" + this.ENTER+this.ENTER;
-      }
-    });
-    
-    return create.toUpperCase();
+  // obtener tipo constraint
+  obtenerClase(constraint: Constraint) {
+    return constraint.name;
   }
 
+  /*  ...?
+
+  generarConstraint(tabla: Tabla): string {
+    let constraint = "";
+
+    constraint += "ALTER TABLE " + tabla.nombreTabla
+            +   this.ENTER + "ADD CONSTRAINT " + this.obtenerClase(tabla.constraint)
+            +   this.cargarCampos(tabla.constraint.nombreDeLosCampos) + ';'
+            +   this.ENTER + "GO" + this.ENTER + this.ENTER;
+    
+    return constraint.toUpperCase();
+  }
+
+  */
+
+
+  setearCampos(campos: FormArray): void {
+    this.camposService = campos;
+  }
+
+  obtenerCampos(): FormArray {
+    return this.camposService;
+  }
 }

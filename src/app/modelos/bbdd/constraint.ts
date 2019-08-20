@@ -1,10 +1,9 @@
-import { Campo } from "./campo";
-
 export class Constraint {
     
-    public campo: string;
+    public campo: any;
+    name: any;
 
-    constructor(campo: Campo) {
+    constructor(campo: any) {
         this.campo = campo.nombreCampo;
     }
 
@@ -14,9 +13,5 @@ export class Constraint {
 
     public getCampo() {
         return this.campo;    
-    }
-
-    public getClass() {
-        return Constraint.name;
     }
 }
