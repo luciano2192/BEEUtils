@@ -33,7 +33,7 @@ export class ModalComponent implements OnInit {
     this.constraintForm = this.fb.group({
       unique: new FormControl([]),
       foreignKey: new FormControl([]),
-    })
+    });
 
     this.scriptFormConstraint.push(this.constraintForm);
 
