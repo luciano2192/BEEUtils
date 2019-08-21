@@ -4,7 +4,7 @@ import { MatDialogModule , MatTabsModule , MatSelectModule } from "@angular/mate
 import { MatButtonModule } from "@angular/material/button";
 import { ModalComponent } from './componentes/modal/modal.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FormsModule } from "@angular/forms";
+import { ReactiveFormsModule , FormsModule } from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -14,6 +14,7 @@ import { FormsModule } from "@angular/forms";
     MatDialogModule,
     MatTabsModule,
     MatSelectModule,
+    ReactiveFormsModule,
     FormsModule,
   ],
   exports: [

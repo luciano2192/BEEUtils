@@ -22,6 +22,7 @@ export class Tabla{
         this.comentario = tabla.comentario;
         this.motor = tabla.motor;
         this.base = tabla.base;
+        this.constraints = tabla.constraints;
     }
 
     public armarNombreTabla(): string {

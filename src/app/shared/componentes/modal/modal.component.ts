@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { GeneradorCreateService } from '../../../services/bbdd/generador-create/generador-create.service';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -11,22 +11,38 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ModalComponent implements OnInit {
   
-  private campos: FormArray;
+  private scriptForm: FormGroup;
+  private constraintForm: FormGroup;
   private detector: boolean = false;
-
+  private campos: FormArray;
+  private scriptFormConstraint: any;
   private optionPK: number;
   private optionFK: number;
   private optionsUnique = [];
 
   constructor(
     private _generadorCreateService:GeneradorCreateService, 
-    public dialogRef: MatDialogRef<ModalComponent>
+    private dialogRef: MatDialogRef<ModalComponent>,
+    private fb: FormBuilder,
     ) {
 
-    this.campos = this._generadorCreateService.obtenerCampos();
+    this.scriptForm = this._generadorCreateService.obtenerFormulario();
    }
 
   ngOnInit() {
+    this.campos = this.scriptForm.controls.campos.value;
+    this.scriptFormConstraint = this.scriptForm.controls.constraints.value;
+    
+    this.constraintForm = this.fb.group({
+      unique: new FormControl([]),
+      foreignKey: new FormControl([]),
+    })
+
+    this.scriptFormConstraint.push(this.constraintForm);
+
+    console.log(this.scriptFormConstraint);
+
+    this.constraintForm.controls.unique.value.push('hola');
     this.verificarSiLosNombreCamposEstanVacios();    
   }
 
@@ -44,5 +60,6 @@ export class ModalComponent implements OnInit {
       }
     }
   }
+
 
 }

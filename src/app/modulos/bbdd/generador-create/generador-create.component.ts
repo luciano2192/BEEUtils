@@ -34,6 +34,9 @@ export class GeneradorCreateComponent implements OnInit {
     nombreTabla: new FormControl(null, [Validators.required]),
     tipoTabla: new FormControl(this.tiposDeTablas[0]),
     comentario: new FormControl(null, [Validators.required]),
+    constraints : new FormArray([
+      
+    ]),
     campos: new FormArray([ 
       new FormGroup({
         nombreCampo: new FormControl({value: null, disabled: true}, [Validators.required]),
@@ -211,13 +214,13 @@ export class GeneradorCreateComponent implements OnInit {
     })
   }
 
-  pasandoCampos(): void {
-    this._generadorCreateService.setearCampos(this.campos.value);
+  pasandoFormulario(): void {
+    this._generadorCreateService.setearFormulario(this.scriptForm);
   }
 
   abrirModal (): void {
     
-    this.pasandoCampos();
+    this.pasandoFormulario();
 
     const dialogRef = this.dialog.open ( ModalComponent , {
       
