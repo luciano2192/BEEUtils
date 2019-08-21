@@ -5,11 +5,8 @@ import {GeneradorCreateService} from '../../../services/bbdd/generador-create/ge
 import {Router, ActivatedRoute} from '@angular/router';
 import { Portapapeles } from '../../../modelos/shared/portapapeles';
 import { TipoTabla } from '../../../shared/constantes/bbdd/tipoTabla.const';
-import { Constraint } from '../../../modelos/bbdd/constraint';
-import { Unique } from "../../../modelos/bbdd/unique";
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ModalComponent } from '../../../shared/componentes/modal/modal.component';
-//import { ForeignKey } from 'src/app/modelos/bbdd/foreignKey';
 
 @Component({
   selector: 'app-generador-create',
@@ -28,9 +25,6 @@ export class GeneradorCreateComponent implements OnInit {
   tiposDeTablas:string[] = [TipoTabla.CFG, TipoTabla.DOM, TipoTabla.LOG, TipoTabla.MAE, TipoTabla.TMP, TipoTabla.TRX];
 
   bbdds: string[] = ["Oracle", "SQLServer"];
-
-
-  tiposConstraint: string[] = ["Unique", "Primary Key", "Foreign Key", "Otra"];
 
 
   scriptForm = new FormGroup({
@@ -225,7 +219,9 @@ export class GeneradorCreateComponent implements OnInit {
     
     this.pasandoCampos();
 
-    const dialogRef = this.dialog.open ( ModalComponent , {} );
+    const dialogRef = this.dialog.open ( ModalComponent , {
+      
+    });
 
     dialogRef.afterClosed().subscribe( data => {
       console .log ( 'El diálogo se cerró' );

@@ -12,11 +12,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class ModalComponent implements OnInit {
   
   private campos: FormArray;
-  detector: boolean = false;
+  private detector: boolean = false;
 
-  optionPK: string;
-  optionFK: string;
-  optionsUnique = [];
+  private optionPK: number;
+  private optionFK: number;
+  private optionsUnique = [];
 
   constructor(
     private _generadorCreateService:GeneradorCreateService, 

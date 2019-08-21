@@ -5,7 +5,7 @@ import {Tabla} from "../../modelos/bbdd/tabla";
 export class Unique extends Constraint {
     
     private ENTER: string = "\n";
-    private campos: string = "";        
+    private campos: string[];        
 
     constructor(campo: any) {
         super(campo);
@@ -21,17 +21,19 @@ export class Unique extends Constraint {
 
     // se le pasa un array como parametro y genera la union
     // de las unique si hay mas de una
-    cargarCamposUnique(camposUnique: Array<string>): string {
+    cargarCamposUnique(): string {
 
-        camposUnique.forEach( element => {
-            if (camposUnique.length > 1) {
-                this.campos = camposUnique.join();
+        let camposFormateados = "";
+
+        this.campos.forEach( element => {
+            if (this.campos.length > 1) {
+                camposFormateados = this.campos.join();
             } else {
-                this.campos = element;
+                camposFormateados = element;
             }
         });
     
-        return '(' + this.campos + ')';
+        return '(' + camposFormateados + ')';
     }
 
     /*
@@ -39,14 +41,13 @@ export class Unique extends Constraint {
         deberia recibir una tabla, donde esten las constraint unique 
     */
 
-    generarConstraint(camposUnique: Array<string>): string {
-        let tabla: Tabla;
+    generarConstraint(tabla: Tabla): string {
 
-        this.campos += "ALTER TABLE " + tabla.nombreTabla
+        let scriptConstraint = "ALTER TABLE " + tabla.nombreTabla
                 +   this.ENTER + "ADD CONSTRAINT " + this.obtenerClase()
-                +   this.cargarCamposUnique(camposUnique) + ';'
+                +   this.cargarCamposUnique() + ';'
                 +   this.ENTER + "GO" + this.ENTER + this.ENTER;
         
-        return this.campos.toUpperCase();
+        return scriptConstraint.toUpperCase();
     }
 }

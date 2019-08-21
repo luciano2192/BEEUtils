@@ -1,4 +1,5 @@
 import {Campo} from './campo';
+import { Constraint } from './constraint';
 
 export class Tabla{
 
@@ -10,6 +11,7 @@ export class Tabla{
     public comentario: string;
     public motor:string;
     public base:string;
+    public constraints: Constraint[];
 
     constructor(tabla: Tabla) {
         this.nombreTabla = tabla.nombreTabla;

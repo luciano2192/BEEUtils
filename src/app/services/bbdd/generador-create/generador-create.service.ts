@@ -111,6 +111,10 @@ export class GeneradorCreateService {
           constraints += this.generarConstraintNN(tabla, campo);
         }
 
+        for(let i=0; i < tabla.constraint.length; i++){
+          tabla.constraint[i].generarConstraint();
+        }
+
         comentarios += this.generarComentarioCampo(tabla, campo);
 
       }
