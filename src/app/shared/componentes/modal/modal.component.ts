@@ -16,9 +16,6 @@ export class ModalComponent implements OnInit {
   private detector: boolean = false;
   private campos: FormArray;
   private scriptFormConstraint: any;
-  private optionPK: number;
-  private optionFK: number;
-  private optionsUnique = [];
 
   constructor(
     private _generadorCreateService:GeneradorCreateService, 
@@ -42,15 +39,13 @@ export class ModalComponent implements OnInit {
 
     console.log(this.scriptFormConstraint);
 
-    this.constraintForm.controls.unique.value.push('hola');
+    this.constraintForm.controls.unique.value.push('hola');    
+
     this.verificarSiLosNombreCamposEstanVacios();    
   }
 
   cerrarModal(){
     this.dialogRef.close();
-    console.log(this.optionsUnique);
-    console.log(this.optionPK);
-    console.log(this.optionFK);
   }
 
   verificarSiLosNombreCamposEstanVacios():boolean {

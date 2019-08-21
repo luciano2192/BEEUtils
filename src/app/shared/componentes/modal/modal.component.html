@@ -7,7 +7,7 @@
         <mat-tab label="Unique">
             <mat-form-field *ngIf="!detector ; else alert" class="m-5" style="width: 400px">
                 <mat-label>Seleccione las Unique</mat-label>
-                <mat-select multiple formControlName="optionsUnique">
+                <mat-select multiple formControlName="unique">
                   <ng-container *ngFor="let campo of campos">
                     <mat-option *ngIf="campo.nombreCampo != null" [value]="campo.nombreCampo">
                       {{campo.nombreCampo}}
@@ -16,22 +16,11 @@
                 </mat-select>
             </mat-form-field>
         </mat-tab>
-        <mat-tab label="Primary Key">
-          <mat-form-field *ngIf="!detector ; else alert" class="m-5" style="width: 400px">
-              <mat-label>Seleccione la Primary Key</mat-label>
-              <mat-select formControlName = "optionPK">
-                <ng-container *ngFor="let campo of campos">
-                <mat-option *ngIf="campo.nombreCampo != null" [value]="campo.nombreCampo">
-                  {{campo.nombreCampo}}
-                </mat-option>
-              </ng-container>
-              </mat-select>
-            </mat-form-field>
-        </mat-tab>
+
         <mat-tab label="Foreign Key">
           <mat-form-field *ngIf="!detector ; else alert" class="m-5" style="width: 400px">
                 <mat-label>Seleccione la Foreign Key</mat-label>
-                <mat-select formControlName="optionFK">
+                <mat-select formControlName="foreignKey">
                   <ng-container *ngFor="let campo of campos">
                   <mat-option *ngIf="campo.nombreCampo != null" [value]="campo.nombreCampo">
                     {{campo.nombreCampo}}
