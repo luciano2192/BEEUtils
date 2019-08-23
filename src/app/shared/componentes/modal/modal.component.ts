@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormGroup, FormControl, FormBuilder } from '@angular/forms';
-import { GeneradorCreateService } from '../../../services/bbdd/generador-create/generador-create.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormArray, FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Constraint } from '../../../modelos/bbdd/constraint';
+import { Unique } from '../../../modelos/bbdd/unique';
+import { ForeignKey } from '../../../modelos/bbdd/foreignKey';
+
 
 @Component({
   selector: 'app-modal',
@@ -12,40 +15,32 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class ModalComponent implements OnInit {
   
   private scriptForm: FormGroup;
-  private constraintForm: FormGroup;
-  private detector: boolean = false;
+  private constraint: FormGroup;
   private campos: FormArray;
-  private scriptFormConstraint: any;
+  private detector: boolean = false;
+
+  private lista: Constraint[] = [];
 
   constructor(
-    private _generadorCreateService:GeneradorCreateService, 
     private dialogRef: MatDialogRef<ModalComponent>,
     private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) data
     ) {
 
-    this.scriptForm = this._generadorCreateService.obtenerFormulario();
-   }
-
-  ngOnInit() {
-    this.campos = this.scriptForm.controls.campos.value;
-    this.scriptFormConstraint = this.scriptForm.controls.constraints.value;
-    
-    this.constraintForm = this.fb.group({
-      unique: new FormControl([]),
-      foreignKey: new FormControl([]),
-    });
-
-    this.scriptFormConstraint.push(this.constraintForm);
-
-    console.log(this.scriptFormConstraint);
-
-    this.constraintForm.controls.unique.value.push('hola');    
-
-    this.verificarSiLosNombreCamposEstanVacios();    
+      this.scriptForm = data.form;
   }
-
-  cerrarModal(){
-    this.dialogRef.close();
+    
+  ngOnInit() {
+    
+    this.campos = this.scriptForm.controls.campos.value;
+    this.constraint = this.scriptForm.controls.constraints.value;
+    
+    this.constraint = this.fb.group({
+      unique: new FormControl([null, [Validators.required]]),
+      foreignKey: new FormControl([null, [Validators.required]]),
+    });
+            
+    this.verificarSiLosNombreCamposEstanVacios();
   }
 
   verificarSiLosNombreCamposEstanVacios():boolean {
@@ -56,5 +51,30 @@ export class ModalComponent implements OnInit {
     }
   }
 
+  guardandoListas(): void {
+           
+    if(this.constraint.value.unique.length > 0){
+      let constraint = new Unique(this.constraint.value.unique);
+      this.scriptForm.controls.constraint.setValue(constraint);
+      // this.lista.push(constraint);
+      // console.log('lista unique ',this.lista);      
+    } 
+    
+    if (this.constraint.value.foreignKey.length > 0) {
+      let constraint = new ForeignKey(this.constraint.value.foreignKey);
+      
+      this.scriptForm.controls.constraint.setValue(constraint);
+      // this.lista.push(constraint);
+      // console.log('lista fk ',this.lista);
+    }
 
+    // console.log('lista modal ',this.lista);
+    
+    this.dialogRef.close({
+      'constraints' : this.constraint,
+      // 'lista' : this.lista,
+    });
+  }
+  
+  
 }

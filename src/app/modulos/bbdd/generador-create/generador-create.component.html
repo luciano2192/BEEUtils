@@ -7,20 +7,20 @@
     <div class="form-group">
       <label for="motor" class="font-weight-bold">Motor de BBDD</label>
       <select formControlName="motor" class="form-control shadow-sm" name="motor" (change)="cambiarTiposDeDatosPorMotor()">
-        <option *ngFor="let bbdd of bbdds" [ngValue]="bbdd">{{bbdd}}</option>
+        <option *ngFor="let bbdd of bbdds" [value]="bbdd">{{bbdd}}</option>
       </select>
     </div>
 
     <div class="form-group" *ngIf='motor.value == "Oracle"'>
       <label for="esquema" class="font-weight-bold">Esquema</label>
       <select formControlName="esquema" class="form-control shadow-sm" name="esquema">
-        <option *ngFor="let esquema of esquemas" [ngValue]="esquema">{{esquema}}</option>
+        <option *ngFor="let esquema of esquemas" [value]="esquema">{{esquema}}</option>
       </select>
     </div>
     <div class="form-group" *ngIf='motor.value == "SQLServer"'> 
       <label for="base" class="font-weight-bold">Base</label>
       <select formControlName="base" class="form-control shadow-sm" name="base">
-        <option *ngFor="let base of bases" [ngValue]="base">{{base}}</option>
+        <option *ngFor="let base of bases" [value]="base">{{base}}</option>
       </select>
     </div>
     
@@ -35,7 +35,7 @@
     <div class="form-group">
       <label for="tipoTabla" class="font-weight-bold">Tipo de tabla</label>
       <select formControlName="tipoTabla" class="form-control shadow-sm">
-        <option *ngFor="let tipo of tiposDeTablas" [ngValue]="tipo">{{tipo}}</option>
+        <option *ngFor="let tipo of tiposDeTablas" [value]="tipo">{{tipo}}</option>
       </select>
     </div>
 
@@ -50,9 +50,11 @@
     </div>
 
     <!-- Modal -->
+    <div class="d-flex m-6">
+    <button type="button" mat-stroked-button class="mr-4" (click)="generarClaves()">Generar claves</button>
 
-    <button mat-stroked-button class="d-flex mb-4" (click)="abrirModal()">Claves</button>
-    
+    <button type="button" mat-stroked-button (click)="verClaves()">Claves generadas</button>
+  </div>
     <h4 class="float-left">Campos</h4>
     <button class="btn btn-primary btnSubmit margin-left" (click)="agregarNuevoCampo()"><span href="#" class="oi oi-plus"></span></button>
     
@@ -74,7 +76,7 @@
                   <label class="input-group-text" for="tipoDato">Tipo</label>
                 </div>
                 <select class="custom-select" id="tipoDato" formControlName="tipoDato" (change)="generarDominioAutomatico(idx)">
-                    <option *ngFor="let tipo of tiposDeDatos" [ngValue]="tipo">{{tipo}}</option>
+                    <option *ngFor="let tipo of tiposDeDatos" [value]="tipo">{{tipo}}</option>
                 </select>
               </div>
         </div>

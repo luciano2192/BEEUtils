@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Tabla } from "../../../modelos/bbdd/tabla";
 import { Campo } from "../../../modelos/bbdd/campo";
 import { Constraint } from '../../../modelos/bbdd/constraint';
-import { FormArray, FormGroup } from '@angular/forms';
 
 @Injectable()
 export class GeneradorCreateService {
@@ -10,8 +9,7 @@ export class GeneradorCreateService {
   private ENTER: string = "\n"; 
   private TAB: string = "\t";  
   private ORDEN_CON_NN : number = 1;
-  private formService: FormGroup;
-
+  
   constructor() { }
 
   generarCreate(tabla:Tabla){
@@ -330,12 +328,14 @@ export class GeneradorCreateService {
 
   */
 
+  generarConstraint(tabla: Tabla): string {
+    let constraint = ''; 
 
-  setearFormulario(campos: FormGroup): void {
-    this.formService = campos;
+    for( let i = 0 ; i < tabla.constraints.length ; i++ ){
+      constraint += tabla.constraints[i].generarConstraint(tabla);
+    };
+
+    return constraint;
   }
 
-  obtenerFormulario(): FormGroup {
-    return this.formService;
-  }
 }

@@ -7,6 +7,7 @@ import { Portapapeles } from '../../../modelos/shared/portapapeles';
 import { TipoTabla } from '../../../shared/constantes/bbdd/tipoTabla.const';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ModalComponent } from '../../../shared/componentes/modal/modal.component';
+import { Constraint } from '../../../modelos/bbdd/constraint';
 
 @Component({
   selector: 'app-generador-create',
@@ -26,7 +27,8 @@ export class GeneradorCreateComponent implements OnInit {
 
   bbdds: string[] = ["Oracle", "SQLServer"];
 
-
+  private lista: Constraint[];
+  
   scriptForm = new FormGroup({
     motor: new FormControl(this.bbdds[0]),
     esquema: new FormControl(this.esquemas[0]),
@@ -34,9 +36,7 @@ export class GeneradorCreateComponent implements OnInit {
     nombreTabla: new FormControl(null, [Validators.required]),
     tipoTabla: new FormControl(this.tiposDeTablas[0]),
     comentario: new FormControl(null, [Validators.required]),
-    constraints : new FormArray([
-      
-    ]),
+    constraints : new FormArray([]),
     campos: new FormArray([ 
       new FormGroup({
         nombreCampo: new FormControl({value: null, disabled: true}, [Validators.required]),
@@ -187,14 +187,13 @@ export class GeneradorCreateComponent implements OnInit {
     return this.tamanio(idx).value != null;
   }
 
-  generarCreate(){
+  generarCreate() {
 
     if(this.scriptForm.valid){
       let tabla:Tabla = new Tabla(this.scriptForm.value);
 
-      //Aca vas a agregar las constraints
+      //Aca vas a agregar las constraints    
       
-
       let create = this._generadorCreateService.generarCreate(tabla);
 
       let contenidoPortapeles = new Portapapeles(create, "No colgues en mandar los grants a SIR...");
@@ -206,29 +205,34 @@ export class GeneradorCreateComponent implements OnInit {
     } 
   }
 
-  generarListaDeCampos() {
+  generarClaves(): void {
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      'form' : this.scriptForm,
+    };
     
-    this.campos.controls.forEach( campo => {
-     // let unCampoLoco = new Campo();
-      console.log(campo.get("nombreCampo").value);
-    })
-  }
-
-  pasandoFormulario(): void {
-    this._generadorCreateService.setearFormulario(this.scriptForm);
-  }
-
-  abrirModal (): void {
+    const dialogRef = this.dialog.open( ModalComponent , dialogConfig );
     
-    this.pasandoFormulario();
+    dialogRef.afterClosed().subscribe( data => {
 
-    const dialogRef = this.dialog.open ( ModalComponent , {
+      this.scriptForm.controls.constraints = data.constraints;
+      
+      console.log('script cdfadf', data.constraints);
+      
+      console.log ( 'El diálogo se cerró' , data.constraints);
+      // this.lista = data.lista;
+
+      console.log('scriptForm generador create ',this.scriptForm);
+      
+      // console.log('lista after closed ',data.lista);
       
     });
-
-    dialogRef.afterClosed().subscribe( data => {
-      console .log ( 'El diálogo se cerró' );
-   });
   }
 
+  verClaves(): void {
+    const dialogRef = this.dialog.open ( ModalComponent , {} );
+  }
+  
 }

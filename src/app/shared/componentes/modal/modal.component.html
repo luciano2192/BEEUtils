@@ -2,7 +2,7 @@
   <h1 mat-dialog-title style="text-align: center"> Genera las constraint </h1>
   <hr style="margin-top: 0px">
 </div>
- <mat-dialog-content [formGroup]="constraintForm">
+ <mat-dialog-content [formGroup]="constraint">
     <mat-tab-group>
         <mat-tab label="Unique">
             <mat-form-field *ngIf="!detector ; else alert" class="m-5" style="width: 400px">
@@ -32,10 +32,9 @@
       </mat-tab-group>
   </mat-dialog-content>
   <hr>
-  <mat-dialog-actions style="justify-content: center">
-      <button (click)="cerrarModal()" class="btn btn-secondary">
-        Cerrar
-      </button>
+  <mat-dialog-actions style="justify-content: space-around">
+      <button id="aceptarModal" type="button" mat-stroked-button class="d-flex mb-4" (click)="guardandoListas()">Aceptar</button>
+      <button type="button" mat-dialog-close mat-stroked-button class="d-flex mb-4">Cerrar</button>
  </mat-dialog-actions>
 
  <!-- ALERTA -->

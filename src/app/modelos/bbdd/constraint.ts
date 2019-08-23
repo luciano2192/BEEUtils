@@ -1,17 +1,21 @@
-export class Constraint {
-    
-    public campo: any;
+import { Tabla } from "./tabla";
+
+export abstract class Constraint {
+      
+    public campo: string[];
     name: any;
 
-    constructor(campo: any) {
-        this.campo = campo.nombreCampo;
+    constructor(campo: string[]) {
+        this.campo = campo;
     }
 
-    public setCampo(nuevoCampo: string) {
+    public setearCampo(nuevoCampo: string[]) {
         this.campo = nuevoCampo;
     }
 
-    public getCampo() {
+    public obtenerCampo() {
         return this.campo;    
     }
+
+    abstract generarConstraint(tabla: Tabla): string;
 }
