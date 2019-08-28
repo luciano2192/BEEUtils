@@ -4,31 +4,29 @@ import { Tabla } from "./tabla";
 export class ForeignKey extends Constraint {
 
     private ENTER: string = "\n";
+    private tablaDestino:string;
+    private campoDestino:string;
+    private campo: string;
     
-    constructor(nombreCampo: string[]) {
-        super(nombreCampo);
-    }
+    constructor(campo: string, campoDestino?: string, tablaDestino?: string) {
+        super()
 
-    obtenerCampo(): string[] {
-        return this.campo;
-    }
-
-    obtenerClase(): string {
-        return ForeignKey.name;
+        this.campo = campo;
+        this.campoDestino = campoDestino;
+        this.tablaDestino = tablaDestino;
     }
 
     generarConstraint(tabla: Tabla): string {
 
         let scriptConstraint = "ALTER TABLE " + tabla.nombreTabla
-                +   this.ENTER + "ADD CONSTRAINT " + this.obtenerClase()
-                +   this.obtenerCampo() + ';'
+                +   this.ENTER + "ADD CONSTRAINT " + "FOREIGN KEY"
+                +   this.campo + " REFERENCES "
+                +   this.tablaDestino + this.campoDestino + ";"
                 +   this.ENTER + "GO" + this.ENTER + this.ENTER;
         
         return scriptConstraint.toUpperCase();
     }
 
-    //ALTER TABLE nombretabla
-    //ADD FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
 
 }
 

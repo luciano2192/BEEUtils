@@ -15,9 +15,9 @@ export class GeneradorCreateService {
   generarCreate(tabla:Tabla){
     this.ORDEN_CON_NN = 1;
     if(tabla.motor == "Oracle"){
-      return this.generarCreateOracle(tabla);
+      return this.generarCreateOracle(tabla) + this.generandoConstraint(tabla);
     }else{
-      return this.generarCreateSQL(tabla);
+      return this.generarCreateSQL(tabla) + this.generandoConstraint(tabla);
     }
   }
 
@@ -308,34 +308,15 @@ export class GeneradorCreateService {
     }
   }
 
-  // obtener tipo constraint
-  obtenerClase(constraint: Constraint) {
-    return constraint.name;
-  }
+  generandoConstraint(tabla: Tabla): string {
+    let constraint = '';
 
-  /*  ...?
-
-  generarConstraint(tabla: Tabla): string {
-    let constraint = "";
-
-    constraint += "ALTER TABLE " + tabla.nombreTabla
-            +   this.ENTER + "ADD CONSTRAINT " + this.obtenerClase(tabla.constraint)
-            +   this.cargarCampos(tabla.constraint.nombreDeLosCampos) + ';'
-            +   this.ENTER + "GO" + this.ENTER + this.ENTER;
+    for (const c in tabla.constraints) {
+      
+      constraint += tabla.constraints[c].generarConstraint(tabla) + this.ENTER;
+    }
     
-    return constraint.toUpperCase();
-  }
-
-  */
-
-  generarConstraint(tabla: Tabla): string {
-    let constraint = ''; 
-
-    for( let i = 0 ; i < tabla.constraints.length ; i++ ){
-      constraint += tabla.constraints[i].generarConstraint(tabla);
-    };
-
-    return constraint;
+    return constraint;    
   }
 
 }

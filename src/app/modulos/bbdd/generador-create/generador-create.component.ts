@@ -8,6 +8,8 @@ import { TipoTabla } from '../../../shared/constantes/bbdd/tipoTabla.const';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { ModalComponent } from '../../../shared/componentes/modal/modal.component';
 import { Constraint } from '../../../modelos/bbdd/constraint';
+import { Unique } from '../../../modelos/bbdd/unique';
+import { ForeignKey } from '../../../modelos/bbdd/foreignKey';
 
 @Component({
   selector: 'app-generador-create',
@@ -27,8 +29,10 @@ export class GeneradorCreateComponent implements OnInit {
 
   bbdds: string[] = ["Oracle", "SQLServer"];
 
-  private lista: Constraint[];
+  private ENTER: string = "\n";
   
+  private constraintsCargadas: Constraint[] = [];
+
   scriptForm = new FormGroup({
     motor: new FormControl(this.bbdds[0]),
     esquema: new FormControl(this.esquemas[0]),
@@ -36,7 +40,6 @@ export class GeneradorCreateComponent implements OnInit {
     nombreTabla: new FormControl(null, [Validators.required]),
     tipoTabla: new FormControl(this.tiposDeTablas[0]),
     comentario: new FormControl(null, [Validators.required]),
-    constraints : new FormArray([]),
     campos: new FormArray([ 
       new FormGroup({
         nombreCampo: new FormControl({value: null, disabled: true}, [Validators.required]),
@@ -187,24 +190,7 @@ export class GeneradorCreateComponent implements OnInit {
     return this.tamanio(idx).value != null;
   }
 
-  generarCreate() {
-
-    if(this.scriptForm.valid){
-      let tabla:Tabla = new Tabla(this.scriptForm.value);
-
-      //Aca vas a agregar las constraints    
-      
-      let create = this._generadorCreateService.generarCreate(tabla);
-
-      let contenidoPortapeles = new Portapapeles(create, "No colgues en mandar los grants a SIR...");
-
-      this._router.navigate(
-        ['resultadoCreate', JSON.stringify(contenidoPortapeles)], 
-        { relativeTo: this.activatedRoute, skipLocationChange: true }
-        );
-    } 
-  }
-
+   
   generarClaves(): void {
 
     const dialogConfig = new MatDialogConfig();
@@ -217,22 +203,37 @@ export class GeneradorCreateComponent implements OnInit {
     
     dialogRef.afterClosed().subscribe( data => {
 
-      this.scriptForm.controls.constraints = data.constraints;
-      
-      console.log('script cdfadf', data.constraints);
-      
-      console.log ( 'El diálogo se cerró' , data.constraints);
-      // this.lista = data.lista;
+      this.constraintsCargadas.push(data);
 
-      console.log('scriptForm generador create ',this.scriptForm);
-      
-      // console.log('lista after closed ',data.lista);
-      
+      console.log(data);
+
     });
   }
 
   verClaves(): void {
     const dialogRef = this.dialog.open ( ModalComponent , {} );
+  }
+
+  generarCreate() {
+
+    if(this.scriptForm.valid){
+      let tabla:Tabla = new Tabla(this.scriptForm.value);
+
+      tabla.constraints = this.constraintsCargadas;
+
+      let create = this._generadorCreateService.generarCreate(tabla);
+      
+      console.log( 'tabla ' , tabla );
+            
+      console.log(create);
+            
+      let contenidoPortapeles = new Portapapeles(create, "No colgues en mandar los grants a SIR...");
+
+      this._router.navigate(
+        ['resultadoCreate', JSON.stringify(contenidoPortapeles)], 
+        { relativeTo: this.activatedRoute, skipLocationChange: true }
+        );
+    } 
   }
   
 }

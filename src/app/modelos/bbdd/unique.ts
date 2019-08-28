@@ -8,37 +8,22 @@ export class Unique extends Constraint {
     private campos: string[];        
 
     constructor(campo: string[]) {
-        super(campo);
+        super();
+        
+        this.campos = campo;
     }
     
-    obtenerCampos(): string[] {
-        return this.campo;
-    }
-
-    obtenerClase(): string {
-        return Unique.name;
-    }
-
-    cargarCamposUnique(): string {
-
-        let camposFormateados = "";
-
-        this.campos.forEach( element => {
-            if (this.campos.length > 1) {
-                camposFormateados = this.campos.join();
-            } else {
-                camposFormateados = element;
-            }
-        });
-    
-        return '(' + camposFormateados + ')';
+    obtenerCampos() {
+        if ( this.campos.length > 1 ) {
+            return '(' + this.campos.join() + ')';
+        } return this.campos;
     }
 
     generarConstraint(tabla: Tabla): string {
 
         let scriptConstraint = "ALTER TABLE " + tabla.nombreTabla
-                +   this.ENTER + "ADD CONSTRAINT " + this.obtenerClase()
-                +   this.cargarCamposUnique() + ';'
+                +   this.ENTER + "ADD CONSTRAINT " + "UNIQUE"
+                +   this.obtenerCampos() + ';'
                 +   this.ENTER + "GO" + this.ENTER + this.ENTER;
         
         return scriptConstraint.toUpperCase();
